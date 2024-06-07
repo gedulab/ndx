@@ -1,0 +1,19 @@
+LIBRARY "ndx.dll"
+
+EXPORTS
+	WinDbgExtensionDllInit
+	ExtensionApiVersion
+	CheckVersion
+
+	ndxhelp
+	lxp
+	address
+	ps
+	idt
+	slab
+	arena
+	test
+	dmesg
+	help
+	ready
+	ivt
