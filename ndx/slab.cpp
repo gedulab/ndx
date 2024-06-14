@@ -126,7 +126,8 @@ void ShowSlabWithSortBySize(ULONG64 ListHeadAddress, ULONG64 FirstEntryAddress, 
 		}	
 	}
 	std::sort(vec_s.begin(), vec_s.end(), compare_vec_slab_Great);
-
+	if (vec_s.empty())
+		return;
 	for (int i = 0; i < vec_s.size()-1; i++)
 	{
 		ShowSlabinfo(vec_s[i]);
