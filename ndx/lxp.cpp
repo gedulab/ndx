@@ -1760,7 +1760,7 @@ void get_task_struct_simple(ULONG64 Address)
 void NdxLxpUsage()
 {
 	dprintf("!lxp to show linux process list or a specified process\n."
-		" Syntax: !process [-f flags] [-p pid] [-P task_struct Address] [-i ImageName]\n"
+		" Syntax: !lxp [-f flags] [-p pid] [-P task_struct Address] [-i ImageName]\n"
 		"  0: using 0 as pid for all processes.\n"
 		" display flags:\n"
 		"  Bit0: basic information about the process.\n"

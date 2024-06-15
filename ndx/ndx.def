@@ -8,12 +8,12 @@ EXPORTS
 	ndxhelp
 	lxp
 	address
-	ps
+	ndxps
 	idt
 	slab
 	arena
 	test
 	dmesg
-	help
+	cndxhelp
 	ready
 	ivt

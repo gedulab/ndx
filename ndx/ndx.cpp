@@ -12,6 +12,10 @@ EXT_API_VERSION	ApiVersion =
 WINDBG_EXTENSION_APIS	ExtensionApis;
 ndx_ctx ndx; // global context with generic system attributes
 
+struct list_head {
+	struct list_head* next, * prev;
+};
+
 ULONG64	SavedMajorVersion;
 ULONG64	SavedMinorVersion;
 /*结束全局变量的定义及声明*/
@@ -55,29 +59,30 @@ DECLARE_API(ndxhelp)
 	dprintf
 	(
 		"Help for Nano Debugger eXtension (NDX) rev. 2.6:\n"
-		" lxp: List linux processes.\n"
-		" ps [num]: walk task list from init_task.\n"
-		" address <addr>: show memory attributes of specified address.\n"
-		" idt [addr]: show interrupt descriptor table on x86 system or ARM.\n"
-		" dmesg: print kernel message.\n"
-		" arena: watch arenas of the glibc heap.\n"
-		" ready: display ready queue of processors.\n"
+		" !lxp: List linux processes.\n"
+		" !ndxps [num]: walk task list from init_task.\n"
+		" !address <addr>: show memory attributes of specified address.\n"
+		" !idt [addr]: show interrupt descriptor table on x86 system or ARM.\n"
+		" !dmesg: print kernel message.\n"
+		" !arena: watch arenas of the glibc heap.\n"
+		" !ready: display ready queue of processors.\n"
 	);
 }
 
-DECLARE_API(help)
+DECLARE_API(cndxhelp)
 {
 	ndxhelp(hCurrentProcess, hCurrentThread, dwCurrentPc, dwProcessor, args);
 }
 /*ndxhelp扩展命令结束*/
 
-DECLARE_API(ps)
+DECLARE_API(ndxps)
 {
 	ULONG64  Address;
 	ULONG  Offset;
 	int num = 0, max = 5;
+	list_head tasks;
 
-	GetExpressionEx("lk!init_task", &Address, &args);
+	GetExpressionEx("lk!init_task", &Address, NULL);
 	GetFieldOffset("lk!task_struct", "tasks", &Offset);
 
 	if (args != NULL && args[0] != 0) {
@@ -91,11 +96,16 @@ DECLARE_API(ps)
 		GetFieldValue(Address, "task_struct", "tasks.next", Address);
 		Address = Address - Offset;//tasks&&list
 
+		//This can be second option:
+		//GetFieldValue(Address, "task_struct", "tasks", tasks);
+		//Address = (ULONG64) tasks.next - Offset;
+
 		num = num + 1;
 	}
 
 	return;
 }
+
 void ShowTaskStructAddress(ULONG64 Address)
 {
 	ULONG64  pid;
